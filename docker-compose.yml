@@ -1,0 +1,49 @@
+version: '2'
+
+services:
+  nginx:
+    image: 'nginx'
+    restart: always
+    ports:
+      - '8081:80'
+    volumes:
+      - ./src:/var/www/html
+      - ./config/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./config/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    links:
+      - php-fpm
+      - db
+
+  php-fpm:
+    image: 'igorlemon/php'
+    restart: always
+    links:
+      - db:mysql
+    volumes:
+      - ./src:/var/www/html
+      - ./config/php/php.ini:/usr/local/etc/php/php.ini
+      - ./config/wordpress.sh:/usr/local/bin/docker-entrypoint.sh
+    env_file:
+      - ./config/environment/mysql.env
+      - ./config/environment/app.env  
+    # Available options:  
+    # --force - force reinstall Wordpress
+    # --with-stacksight - install Stacksight plugin
+    # --stacksight-from-git - Get plugin from GitHub else get from official wordpress.org
+    entrypoint: ["/bin/bash", "/usr/local/bin/docker-entrypoint.sh", "--with-stacksight", "--stacksight-from-git"]     
+    
+  db:
+    image: mysql:5.7
+    volumes:
+      - dd-mysqldata:/var/lib/mysql:rw
+      - ./config/database/custom.cnf:/etc/mysql/conf.d/custom.cnf  
+    restart: always
+    env_file:
+      - ./config/environment/mysql.env
+    ports :
+      - "3307:3306"
+    hostname: db 
+
+volumes:
+  dd-mysqldata:
+    driver: local
