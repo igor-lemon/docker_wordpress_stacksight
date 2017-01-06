@@ -12,8 +12,11 @@ Install
 
 1) Clone source
 `git clone https://github.com/igor-lemon/docker_wordpress_stacksight.git`
+
 2) Run `composer up -d` command. 
+
 3) Waiting to set environment (you can see status in php-fpm container)
+
 4) Open site in browser _(Default: http://localhost:8081/)_
 
 Options
