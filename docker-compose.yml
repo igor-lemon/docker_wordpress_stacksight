@@ -15,7 +15,10 @@ services:
       - db
 
   php-fpm:
-    image: 'igorlemon/php'
+    image: 'igorlemon/php:5.6'
+    # Available images:
+    #For PHP v5.6 need to use image: 'igorlemon/php:5.6'
+    #For PHP v7 need to use image: 'igorlemon/php' or 'igorlemon/php:latest'
     restart: always
     links:
       - db:mysql

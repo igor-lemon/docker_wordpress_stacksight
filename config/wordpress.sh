@@ -140,7 +140,8 @@ EOPHP
             echo "Install from Wordpress.org"
             wp plugin install stacksight --activate-network --activate --force --allow-root
         fi
-        cat << EOF >> $APP_PATH/wp-config.php
+#        $APP_PATH/wp-config.php
+        cat << EOF >> $APP_PATH/tmp.txt
 // StackSight start config
 \$ss_inc = dirname(__FILE__) . '/wp-content/plugins/stacksight/stacksight-php-sdk/bootstrap-wp.php';
 if(is_file(\$ss_inc)) {
@@ -148,9 +149,9 @@ if(is_file(\$ss_inc)) {
     require_once(\$ss_inc);
 }
 // StackSight end config
-/** Sets up WordPress vars and included files. */
-require_once(ABSPATH . 'wp-settings.php');
 EOF
+sed -i -e "/Sets up WordPress vars and included files/r $APP_PATH/tmp.txt" $APP_PATH/wp-config.php
+rm $APP_PATH/tmp.txt
     fi
 
 fi
